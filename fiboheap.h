@@ -17,8 +17,23 @@ class fiboheap{
       T data;
       }
     
-    public void insert(T val, T key){
-
+    public void insert(T val){
+			fibnode* newNode = new fibnode;
+			fibnode->left = NULL;
+			fibnode->right = NULL;
+			fibnode->parent = NULL;
+			fibnode->childcut = false;
+			fibnode->degree = 0;
+			if(root==NULL)
+			{
+				root = newNode;
+				minRoot = newNode;
+			}
+			else
+			{
+				minRoot = (minroot->data > newNode->data) ? newNode:minRoot;
+				addSibling(root,newNode);				
+			}
     }
 
     public void merge(fibnode* h1,fibnode* h2){

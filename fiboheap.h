@@ -2,13 +2,15 @@
 #ifndef FIBOHEAP_H
 #define FIBOHEAP_H
 
+#include"fqueue.h"
+
 using namespace std;
 
 template<class T>
 
 class fiboheap{
 		
-		
+		fqueue<fibnode*> nodeDegree[5000];		
     struct fibnode{
       int degree;
       fibnode* child;
@@ -43,25 +45,40 @@ class fiboheap{
     	if(h1->data >= h2->data)
     	{
     		addSibling(h2,h1);
-    		
     	}
     	else{
     		addSibling(h1,h2);
     	}
     }
     
-    public void addSibling(fibnode* h1, fibnode* h2)
+    public void addSibling(fibnode** h1, fibnode** h2)
     {
     	
     	h2->left = h1->child->left->right;
     	h2->right = h1->child;
     	h1->child->left->right = h2;
-    	
+			h1->degree = h1->degree +1;    	
     }
     
     
 
     public void removeMin(){
+    	fibnode* firstChild = minroot->child;
+    	if(root!=empty)
+    	{
+    		fibnode* temp = firstChild;
+    		while(temp->right=firstChild){
+    			temp->parent = NULL;
+    			temp = temp->right
+    		}
+    		temp->parent = NULL;
+    		addSibling(root,temp);
+    	}
+    	
+    	
+    		
+    	
+    	
 
     }
 

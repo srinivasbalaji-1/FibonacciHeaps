@@ -1,3 +1,10 @@
+/* 
+ * File:   fiboheap.h
+ * Author: srinivas
+ *
+ * Created on March 19, 2014, 4:33 PM
+ */
+
 #pragma once
 #ifndef FIBOHEAP_H
 #define FIBOHEAP_H
@@ -8,10 +15,11 @@ using namespace std;
 
 template<class T>
 
-class fiboheap{
-		
-		fqueue<fibnode*> nodeDegree[5000];		
-    struct fibnode{
+class fiboheap{	
+    	
+    
+    struct fibnode
+    {
       int degree;
       fibnode* child;
       fibnode* left;
@@ -19,69 +27,93 @@ class fiboheap{
       fibnode* parent;
       bool childcut;
       T data;
-      }
+      };
+      fqueue<fibnode *> nodeDegree[5000]; 
+      fibnode* minRoot;
+      fibnode* root;
+      
+    public:
     
-    public void insert(T val){
-			fibnode* newNode = new fibnode;
-			fibnode->left = NULL;
-			fibnode->right = NULL;
-			fibnode->parent = NULL;
-			fibnode->childcut = false;
-			fibnode->degree = 0;
-			h1->data = val; 
- 			if(root==NULL)
-			{
-				root = newNode;
-				minRoot = newNode;
-			}
-			else
-			{
-				minRoot = (minroot->data > newNode->data) ? newNode:minRoot;
-				addSibling(root,newNode);				
-			}
+    void insert(T val)
+    {
+	fibnode* newNode = new fibnode;
+        newNode->left = NULL;
+        newNode->right = NULL;
+	newNode->parent = NULL;
+	newNode->childcut = false;
+	newNode->degree = 0;
+	newNode->data = val; 
+ 	if(minRoot==NULL)
+	{
+  	minRoot = newNode;
+	}
+	else
+	{
+		minRoot = (minRoot->data > newNode->data) ? newNode:minRoot;
+		addSibling(root,newNode);				
+	}
     }
 
-    public void merge(fibnode* h1,fibnode* h2){
+    void merge(fibnode* h1,fibnode* h2)
+    {
     	if(h1->data >= h2->data)
     	{
-    		addSibling(h2,h1);
+        	if(h2->child!=NULL) 
+                    addSibling(h2->child,h1);
+    		else
+    		{
+    			h2->degree = h2->degree+1;
+    			h2->child = h1;
+    		}
     	}
-    	else{
-    		addSibling(h1,h2);
+    	else
+        {
+    		if(h1->child!=NULL) 
+                    addSibling(h1->child,h1);
+    		else
+    		{
+    			h1->degree = h1->degree +1;
+    			h1->child = h2;
+    		}
+    		
     	}
     }
     
-    public void addSibling(fibnode** h1, fibnode** h2)
+    void addSibling(fibnode* h1, fibnode* h2)
     {
     	
-    	h2->left = h1->child->left->right;
-    	h2->right = h1->child;
-    	h1->child->left->right = h2;
-			h1->degree = h1->degree +1;    	
+    	h2->left = h1->left;
+    	h2->right = h1;
+    	h2->parent = h1->parent;
+    	h1->parent->degree = h1->parent->degree +1;
+    	h1->->left->right = h2;    	
     }
     
     
 
-    public void removeMin(){
-    	fibnode* firstChild = minroot->child;
-    	if(root!=empty)
+    void removeMin(){
+    	fibnode* firstChild = minRoot->child;
+    	if(root!=NULL)
     	{
     		fibnode* temp = firstChild;
-    		while(temp->right=firstChild){
+    		while(temp->right=firstChild)
+    		{
     			temp->parent = NULL;
-    			temp = temp->right
+    			temp = temp->right;
     		}
     		temp->parent = NULL;
     		addSibling(root,temp);
     	}
     	
-    	minRoot->left->right = minRoot->right->left;
-    	minRoot->left = NULL;
-    	minRoot->right = NULL;
+    	minRoot->left->right = minRoot->right;
+    	minRoot->right->left = minRoot->left;
+    	minRoot = NULL;
     	fibnode* firstNode = root;
     	fibnode* temp = root;
-    	while(temp->next!=root)
+    	while(temp->right!=root)
     	{
+    		minRoot = (minRoot!=NULL && temp->data < minRoot->data) ? temp:minRoot;
+    		if(minRoot==NULL) minRoot = temp;
     		if(!nodeDegree[temp->degree].isEmpty())
     		{
     			 merge(nodeDegree[temp->degree].front(),temp);
@@ -97,19 +129,17 @@ class fiboheap{
 
     }
 
-    public void descreaseKey(fibnode* h,T key,T val){
+    void descreaseKey(fibnode* h,T key,T val){
 
     }
 
-    public void delete(fibnode* h,T key){
+    
+
+    void cascadingCut(fibnode* h,T key){
 
     }
 
-    public void cascadingCut(fibnode* h,T key){
-
-    }
-
-    public void cut(fibnode* h){
+    void cut(fibnode* h){
 
     }
 
@@ -118,3 +148,5 @@ class fiboheap{
 }
 
 #endif
+
+

@@ -75,7 +75,22 @@ class fiboheap{
     		addSibling(root,temp);
     	}
     	
-    	
+    	minRoot->left->right = minRoot->right->left;
+    	minRoot->left = NULL;
+    	minRoot->right = NULL;
+    	fibnode* firstNode = root;
+    	fibnode* temp = root;
+    	while(temp->next!=root)
+    	{
+    		if(!nodeDegree[temp->degree].isEmpty())
+    		{
+    			 merge(nodeDegree[temp->degree].front(),temp);
+    			 nodeDegree[temp->degree].pop();
+    		}
+    		else{
+    			nodeDegree[temp->degree].push(temp);
+    		}
+    	}
     		
     	
     	

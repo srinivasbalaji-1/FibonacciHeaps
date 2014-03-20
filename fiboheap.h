@@ -26,7 +26,7 @@ class fiboheap {
         bool childcut;
         T data;
     };
-    fqueue<fibnode *> nodeDegree[1000];
+
     fibnode* minRoot;
     fibnode* root;
 
@@ -90,7 +90,11 @@ public:
         }
     }
 
+        /**
+     * Removes the minimum element and melds trees that have equal degree. 
+     */
     void removeMin() {
+        fqueue<fibnode *> nodeDegree[1000];
         fibnode* firstChild = minRoot->child;
         fibnode* temp = firstChild;
         if (temp != NULL) {
@@ -104,12 +108,14 @@ public:
 
         minRoot->left->right = minRoot->right;
         minRoot->right->left = minRoot->left;
-        root = (minRoot == root && root->right != root) ? minRoot->right : NULL;
+        root = (minRoot == root && root->right != root) ? minRoot->right : (minRoot != root) ? root : NULL;
+
         minRoot = NULL;
 
         fibnode* firstNode = root;
         temp = root;
-        while (root != NULL && temp->right != firstNode) {
+        nodeDegree[temp->degree].push(temp);
+        while (root != NULL && temp != firstNode) {
             firstNode = root;
             minRoot = (minRoot != NULL && temp->data < minRoot->data) ? temp : minRoot;
             if (minRoot == NULL) minRoot = temp;
@@ -119,6 +125,7 @@ public:
             } else {
                 nodeDegree[temp->degree].push(temp);
             }
+            temp = temp->right;
         }
         if (root != NULL) {
             temp = root;

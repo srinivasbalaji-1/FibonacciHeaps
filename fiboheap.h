@@ -29,21 +29,31 @@ class fiboheap {
 
     fibnode* minRoot;
     fibnode* root;
+    
+    
 
 public:
-
+    
+    fiboheap()
+    {
+        minRoot = NULL;
+        root = NULL;
+    }
+    
     void insert(T val) {
         fibnode* newNode = new fibnode;
         newNode->left = newNode;
         newNode->right = newNode;
         newNode->parent = NULL;
+        newNode->child = NULL;
         newNode->childcut = false;
         newNode->degree = 0;
         newNode->data = val;
         if (minRoot == NULL) {
             root = newNode;
             minRoot = newNode;
-        } else {
+        } 
+        else {
             minRoot = (minRoot->data > newNode->data) ? newNode : minRoot;
             addSibling(root, newNode);
         }
@@ -90,11 +100,12 @@ public:
         }
     }
 
-        /**
+    /**
      * Removes the minimum element and melds trees that have equal degree. 
      */
     void removeMin() {
         fqueue<fibnode *> nodeDegree[1000];
+        if(minRoot==NULL) return;
         fibnode* firstChild = minRoot->child;
         fibnode* temp = firstChild;
         if (temp != NULL) {
@@ -114,7 +125,8 @@ public:
 
         fibnode* firstNode = root;
         temp = root;
-        nodeDegree[temp->degree].push(temp);
+        if (temp != NULL)
+            nodeDegree[temp->degree].push(temp);
         while (root != NULL && temp != firstNode) {
             firstNode = root;
             minRoot = (minRoot != NULL && temp->data < minRoot->data) ? temp : minRoot;
@@ -139,6 +151,7 @@ public:
     }
 
     T getMin() {
+    		if(minRoot == NULL) return -100;
         return minRoot->data;
     }
 
